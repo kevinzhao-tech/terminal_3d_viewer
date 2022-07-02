@@ -1,29 +1,46 @@
 #ifndef __FILE_IO_H__
 #define __FILE_IO_H__
-#endif
 
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
+
 using namespace std;
+
+
+struct Vertex
+{
+    float x;
+    float y;
+    float z;
+};
+
+struct Vertex_hash {
+    size_t operator()(const Vertex& other) const {
+            return hash<float>()(other.x) ^ hash<float>()(other.y) ^ hash<float>()(other.z);
+    }
+};
 
 struct Facet
 {
     float normal[3];
-    float vertex_one[3];
-    float vertex_two[3];
-    float vertex_three[3];
+    Vertex vertex_one;
+    Vertex vertex_two;
+    Vertex vertex_three;
 };
 
 class STL {
     public:
+        STL();
         STL(char*);
+        STL(const STL& other);
         ~STL();
         std::vector<Facet> facets;
     private:
-        ifstream file;
-        char* filename;
-        int facet_count;
+        string filename_;
+        unsigned int facet_count_;
         void _readSTL();
 };
 
+#endif
